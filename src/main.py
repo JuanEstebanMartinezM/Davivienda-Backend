@@ -11,6 +11,11 @@ Configura:
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import sys
+import os
+
+# Agregar el directorio actual (src) al path para permitir importaciones absolutas
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from core.config import settings
 from api.routes import auth, tasks
