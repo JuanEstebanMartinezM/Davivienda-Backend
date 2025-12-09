@@ -21,6 +21,7 @@ from core.config import settings
 from api.routes import auth, tasks
 from middleware.security_headers import SecurityHeadersMiddleware
 from middleware.rate_limit import RateLimitMiddleware
+from db.base import init_db
 
 
 # Crear aplicación FastAPI
@@ -31,6 +32,9 @@ app = FastAPI(
     docs_url="/docs" if settings.debug else None,
     redoc_url="/redoc" if settings.debug else None,
 )
+
+# Inicializar base de datos al arrancar
+app.add_event_handler("startup", init_db)
 
 # Middleware CORS
 app.add_middleware(
