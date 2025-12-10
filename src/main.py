@@ -36,22 +36,22 @@ app = FastAPI(
 # Inicializar base de datos al arrancar
 app.add_event_handler("startup", init_db)
 
-# Middleware CORS
+# Middleware de rate limiting (se agrega primero, se ejecuta después de CORS)
+app.add_middleware(
+    RateLimitMiddleware,
+    requests_per_minute=60
+)
+
+# Middleware de seguridad
+app.add_middleware(SecurityHeadersMiddleware)
+
+# Middleware CORS (se agrega último, se ejecuta PRIMERO - esto es importante!)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-)
-
-# Middleware de seguridad
-app.add_middleware(SecurityHeadersMiddleware)
-
-# Middleware de rate limiting
-app.add_middleware(
-    RateLimitMiddleware,
-    requests_per_minute=60
 )
 
 # Incluir routers
